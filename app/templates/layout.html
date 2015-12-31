@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{{template "title" .}} - Hive</title>
+  
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700|Roboto+Condensed:300,700,400" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/stylesheets/site.css" />
+</head>
+
+<body>
+  <div class="navbar navbar-static-top navbar-inverse">
+    <div class="container">
+      <a class="navbar-brand" href="/">Hive</a>
+      <ul class="nav navbar-nav">        
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Events <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header">Competitions</li>
+            <li><a href="/events/epl/2015-2016">Premier League</a></li>
+            <li><a href="/events/serie-a/2015-2016">Serie A</a></li>
+            <li><a href="/events/bundesliga/2015-2016">Bundesliga</a></li>
+            <li><a href="/events/la-liga/2015-2016">La Liga</a></li>            
+            <li class="divider"></li>
+            <li><a href="/events/update">Update</a></li>            
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    {{template "content" .}}
+  </div>
+  <div>    
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  </div>
+</body>
+</html>

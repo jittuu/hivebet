@@ -1,0 +1,39 @@
+{{define "title"}}
+  Events
+{{end}}
+
+{{define "content"}}
+<div class="row">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Home</th>
+        <th>Away</th>        
+        <th>Hdp</th>
+        <th>H</th>
+        <th>A</th>
+        <th>MM</th>        
+      </tr>
+    </thead>
+    <tbody>
+      {{range .}}
+        <tr>
+            <td>{{ .StartTime.Format "02-01-2006" }}</td>
+            {{ if .AvgAHOdds.IsHomeFavorite }}
+            <td class="fav">{{ .Home }}</td>
+            <td>{{ .Away }}</td>
+            {{ else }}
+            <td>{{ .Home }}</td>
+            <td  class="fav">{{ .Away }}</td>
+            {{ end }}
+            <td>{{ .Handicap }}</td>
+            <td>{{ printf "%.2f" .HomeOdds }}</td>
+            <td>{{ .AvgAHOdds.Away }}</td>
+            <td class="mmOdds">{{ .FormatMyanmarOdds }}</td>
+        </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{end}}
