@@ -4,12 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"google.golang.org/appengine/datastore"
-
 	"github.com/gorilla/mux"
 	"github.com/jittuu/hivebet"
 	"github.com/jittuu/hivebet/oddsUtil"
-	"github.com/mjibson/goon"
 
 	"golang.org/x/net/context"
 )
@@ -19,14 +16,8 @@ func getEventsIndex(ctx context.Context, w http.ResponseWriter, r *http.Request)
 	league := vars["league"]
 	season := vars["season"]
 
-	g := goon.FromContext(ctx)
-	query := datastore.NewQuery("Event").
-		Filter("League =", league).
-		Filter("Season =", season).
-		Order("-StartTime")
-
-	var events []*hivebet.Event
-	_, err := g.GetAll(query, &events)
+	db := &hivebet.Db{ctx}
+	events, err := db.GetAllEvents(league, season)
 	if err != nil {
 		return err
 	}
@@ -101,4 +92,23 @@ func (e *EventView) HomeOdds() float64 {
 func (e *EventView) AwayOdds() float64 {
 	hk := oddsUtil.ConvertToHK(e.AvgAHOdds.Away)
 	return oddsUtil.ConvertToMalay(hk)
+}
+
+func (e *EventView) FavoriteWinLoss() float64 {
+	goals, odds := e.MyanmarOdds()
+	var diff int
+	if e.AvgAHOdds.IsHomeFavorite() {
+		diff = (e.HGoal - goals - e.AGoal)
+	} else {
+		diff = (e.AGoal - goals - e.HGoal)
+	}
+
+	switch {
+	case diff > 0:
+		return 1
+	case diff < 0:
+		return -1
+	default:
+		return odds
+	}
 }

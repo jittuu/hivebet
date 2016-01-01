@@ -19,6 +19,9 @@ func init() {
 	events.Handle("/update", hivebet.AppHandler(getEventsUpdate)).Methods("GET")
 	events.Handle("/update", hivebet.AppHandler(postEventsUpdate)).Methods("POST")
 
+	ranks := r.PathPrefix("/ranks").Subrouter()
+	ranks.Handle("/{league}/{season}", hivebet.AppHandler(getRanksIndex)).Methods("GET")
+
 	http.Handle("/", r)
 }
 

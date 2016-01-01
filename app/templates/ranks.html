@@ -1,0 +1,31 @@
+
+{{define "title"}}
+  Team Ranks
+{{end}}
+
+{{define "content"}}
+<div class="row">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Team</th>
+        <th>Profit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range . }}
+      <tr>
+        <td>{{ .Name }}</td>
+        {{ if lt .Profit 0.0 }}
+        <td class="negative">
+        {{ else }}
+        <td>
+        {{ end }}
+          {{ printf "%.2f" .Profit }}
+        </td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</div>
+{{end}}

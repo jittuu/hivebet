@@ -9,11 +9,14 @@
       <tr>
         <th>Date</th>
         <th>Home</th>
-        <th>Away</th>        
+        <th>Away</th>
         <th>Hdp</th>
         <th>H</th>
         <th>A</th>
-        <th>MM</th>        
+        <th>MM</th>
+        <th>HG</th>
+        <th>AG</th>
+        <th>FavWL</th>
       </tr>
     </thead>
     <tbody>
@@ -31,6 +34,15 @@
             <td>{{ printf "%.2f" .HomeOdds }}</td>
             <td>{{ .AvgAHOdds.Away }}</td>
             <td class="mmOdds">{{ .FormatMyanmarOdds }}</td>
+            <td>{{ .HGoal }}</td>
+            <td>{{ .AGoal }}</td>
+            {{ if lt .FavoriteWinLoss 0.0 }}
+            <td class="negative">
+            {{ else }}
+            <td>
+            {{ end }}
+              {{ printf "%.2f" .FavoriteWinLoss }}
+            </td>
         </tr>
       {{end}}
     </tbody>
