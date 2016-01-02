@@ -28,42 +28,60 @@ func getRanksIndex(ctx context.Context, w http.ResponseWriter, r *http.Request) 
 	}
 
 	teamRanks := make([]*TeamRank, len(teams))
+	teamLast5Ranks := make([]*TeamRank, len(teams))
 
 	var i int
 	for t, tEvents := range teams {
-		rnk := &TeamRank{Name: t}
-		teamRanks[i] = rnk
+		teamRanks[i] = getTeamRanks(t, tEvents)
+		teamLast5Ranks[i] = getTeamRanks(t, tEvents[:5])
 		i++
+	}
 
-		for _, e := range tEvents {
-			ew := &EventView{e}
-			favWL := ew.FavoriteWinLoss()
-			if t == ew.Home {
-				if ew.AvgAHOdds.IsHomeFavorite() {
-					rnk.Profit += favWL
-				} else {
-					rnk.Profit -= favWL
-				}
+	sort.Sort(ByProfit(teamRanks))
+	sort.Sort(ByProfit(teamLast5Ranks))
+
+	return hivebet.RenderTemplate(w,
+		&TeamRanksView{TeamAllRank: teamRanks, TeamLast5Rank: teamLast5Ranks},
+		"templates/ranks.html")
+}
+
+func getTeamRanks(name string, events []*hivebet.Event) *TeamRank {
+	rnk := &TeamRank{Name: name}
+
+	for _, e := range events {
+		ew := &EventView{e}
+		favWL := ew.FavoriteWinLoss()
+		if name == ew.Home {
+			if ew.AvgAHOdds.IsHomeFavorite() {
+				rnk.Profit += favWL
 			} else {
-				if ew.AvgAHOdds.IsHomeFavorite() {
-					rnk.Profit -= favWL
-				} else {
-					rnk.Profit += favWL
-				}
+				rnk.Profit -= favWL
+			}
+		} else {
+			if ew.AvgAHOdds.IsHomeFavorite() {
+				rnk.Profit -= favWL
+			} else {
+				rnk.Profit += favWL
 			}
 		}
 	}
 
-	sort.Sort(ByProfit(teamRanks))
-
-	return hivebet.RenderTemplate(w, teamRanks, "templates/ranks.html")
+	return rnk
 }
 
+// TeamRanksView is view model for ranks
+type TeamRanksView struct {
+	TeamAllRank   []*TeamRank
+	TeamLast5Rank []*TeamRank
+}
+
+// TeamRank is view model for a team rank
 type TeamRank struct {
 	Name   string
 	Profit float64
 }
 
+// ByProfit is sorter for []*TeamRank
 type ByProfit []*TeamRank
 
 func (s ByProfit) Len() int {
